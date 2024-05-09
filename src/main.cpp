@@ -11,7 +11,12 @@
 #include <errno.h>
 #include <time.h>
 
-#include <seif.h>
+#include "color.h"
+#include "vect.h"
+#include "ray.h"
+#include "light.h"
+#include "camera.h"
+#include "seif.h"
 
 struct rgb_data {
 	double r;
@@ -79,8 +84,8 @@ void write_seif(const char *filename, int w, int h, struct rgb_data *data)
 
 int main(int argc, char *argv[])
 {
-	int width = 32;
-	int height = 32;
+	int width = 640;
+	int height = 480;
 
 	struct rgb_data *data = new struct rgb_data[width*height];
 
@@ -93,6 +98,24 @@ int main(int argc, char *argv[])
 			data[k].b = 255;
 		}
 	}
+
+	Vect X(1,0,0);
+	Vect Y(0,1,0);
+	Vect Z(0,0,1);
+
+	Vect campos(3, 1.5, -4);
+
+	Vect look_at(0,0,0);
+	Vect diff_btw(campos.getVectX() - look_at.getVectX(), campos.getVectY() - look_at.getVectY(), campos.getVectZ() - look_at.getVectZ());
+
+	Vect camdir = diff_btw.negative().normalize();
+	Vect camright = Y.cross(camdir).normalize();
+	Vect camdown = camright.cross(camdir);
+	Camera scene_cam(campos, camdir, camright, camdown);
+
+	Vect light_pos(-7,10,-10);
+	Color white(1.0,1.0,1.0,0);
+	Light scene_light(light_pos, white);
 
 	write_seif("output.seif", width, height, data);
 
