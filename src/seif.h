@@ -30,7 +30,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
-typedef unsigned long u64;
+typedef unsigned long long u64;
 
 // Seif Meta
 typedef struct
@@ -55,14 +55,9 @@ typedef struct
 // Image Chunk Header
 typedef struct
 {
-	u32 idx;
+	u32 width;	//	Width and height have to multiply to chunk_size otherwise its an invalid image
+	u32 height;	//
 } __attribute((packed)) SEIF_ChunkHeader;
-
-// Image Chunk
-typedef struct
-{
-	SEIF_ChunkHeader header;
-} __attribute((packed)) SEIF_Chunk;
 
 // Seif Flags
 #define SEIF_FLAG_ALPHA (1 << 0)
@@ -82,9 +77,10 @@ typedef struct
 //   		- signature: "LEAFSEIF"
 //   	- chunk_count
 //   	- chunk_size
-//   [FIRST CHUNK]
+//   [CHUNK]
 //   	- [HEADER]:
-//   		- idx: 1
+//   		- width
+//   		- height
 //   	- [data]: The data can be represented in code as `uint8_t data[chunk_size * encoding_size]`. Both gathered from the header
 //
 // Chunks are layed out like this on the image:
