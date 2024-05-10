@@ -67,6 +67,13 @@ void write_seif(const char *filename, int w, int h, struct rgb_data *data)
 	// write header
 	fwrite(&header, 1, sizeof(header), f);
 
+	// write chunk header
+	SEIF_ChunkHeader chunk_header = {
+		.height = static_cast<u32>(h),
+		.width = static_cast<u32>(w)
+    };
+	
+	fwrite(&chunk_header, 1, sizeof(chunk_header), f);
 	// write image data
 	for (int i = 0; i < w*h; i++) {
 
