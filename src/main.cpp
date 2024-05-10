@@ -5,6 +5,8 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <random>
+#include <ctime>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -96,13 +98,15 @@ int main(int argc, char *argv[])
 
 	struct rgb_data *data = new struct rgb_data[width*height];
 
-	// generate pure white pixels
+	// generate random pixels
+    std::mt19937 rng(std::time(nullptr));
+	std::uniform_int_distribution<int> distribution(1, 255);
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
 			int k = y*width + x;
-			data[k].r = 255;
-			data[k].g = 255;
-			data[k].b = 255;
+			data[k].r = distribution(rng);;
+			data[k].g = distribution(rng);;
+			data[k].b = distribution(rng);;
 		}
 	}
 
